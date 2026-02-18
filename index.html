@@ -290,6 +290,42 @@
         .fa-spinner {
             margin-left: 8px;
         }
+        /* Doctor message */
+        .doctor-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #e6f3ff;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid #004080;
+        }
+        .doctor-avatar {
+            width: 60px;
+            height: 60px;
+            background: #004080;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: white;
+            font-size: 30px;
+        }
+        .doctor-message p {
+            color: #004080;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 8px 0;
+        }
+        .doctor-sign {
+            font-style: italic;
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+            border-top: 1px dashed #004080;
+            padding-top: 8px;
+        }
         /* Service Grid */
         .section-title {
             font-size: 36px;
@@ -471,6 +507,14 @@
             <div class="form-card" id="formContainer">
                 <div id="formSection">
                     <h3>Book Your Appointment</h3>
+                    <!-- Doctor message added here -->
+                    <div id="doctorMessage" class="doctor-message">
+                        <div class="doctor-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <p>✓ Your appointment request has been received!</p>
+                        <p><strong>Book another Appointment</strong></p>
+                       
                     <form id="appointmentForm">
                         <!-- Web3Forms Public Access Key -->
                         <input type="hidden" id="accessKey" value="bbc68695-ea6a-4a7d-86b7-987602ea7eaf">
@@ -635,7 +679,7 @@
         </div>
     </footer>
 
-    <!-- JavaScript for Form Submission with Popup -->
+    <!-- JavaScript for Form Submission with Doctor Message -->
     <script>
         // ===== CONFIGURATION =====
         const WEB3FORMS_ACCESS_KEY = 'bbc68695-ea6a-4a7d-86b7-987602ea7eaf';
@@ -646,17 +690,7 @@
         const submitBtn = document.getElementById('submitBtn');
         const nameInput = document.getElementById('name');
         const phoneInput = document.getElementById('phone');
-        const popup = document.getElementById('thankyouPopup');
-        
-        // Function to show popup
-        function showPopup() {
-            popup.style.display = 'flex';
-        }
-        
-        // Function to close popup
-        window.closePopup = function() {
-            popup.style.display = 'none';
-        }
+        const doctorMessage = document.getElementById('doctorMessage');
         
         // Handle form submission
         appointmentForm.addEventListener('submit', async function(e) {
@@ -713,12 +747,17 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Show thank you popup
-                    showPopup();
+                    // Show doctor message
+                    doctorMessage.style.display = 'block';
                     
                     // Clear the form
                     nameInput.value = '';
                     phoneInput.value = '';
+                    
+                    // Hide doctor message after 5 seconds
+                    setTimeout(() => {
+                        doctorMessage.style.display = 'none';
+                    }, 5000);
                 } else {
                     alert('Submission failed: ' + (result.message || 'Please try again'));
                 }
@@ -729,13 +768,6 @@
                 // Re-enable submit button
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Book Appointment <i class="fas fa-arrow-right"></i>';
-            }
-        });
-        
-        // Close popup when clicking outside
-        window.addEventListener('click', function(e) {
-            if (e.target === popup) {
-                closePopup();
             }
         });
     </script>
